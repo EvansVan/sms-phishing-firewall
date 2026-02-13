@@ -1,0 +1,35 @@
+# Flask and web framework
+Flask==3.0.0
+flask-sqlalchemy==3.1.1
+flask-migrate==4.0.5
+gunicorn==21.2.0
+
+# Africa's Talking SDK
+africastalking==1.2.6
+
+# Google Cloud AI / Gemini
+# Option 1: Vertex AI (for GCP production)
+# NOTE: Do NOT pin or include `vertexai` here — it may conflict with platform
+# dependencies. `google-cloud-aiplatform==1.38.1` is sufficient for typical
+# Vertex AI usage. If you need `vertexai`, add a compatible version manually.
+google-cloud-aiplatform==1.38.1
+
+# Option 2: Gemini API SDK (for development/testing)
+google-genai==0.1.2
+
+# Database
+SQLAlchemy==2.0.23
+alembic==1.13.1
+
+# Environment and configuration
+python-dotenv==1.0.0
+
+# HTTP requests
+requests==2.31.0
+
+# Social media (optional)
+tweepy==4.14.0
+
+# Utilities
+python-dateutil==2.8.2
+
