@@ -40,7 +40,7 @@ RequestBin shows you:
 - **Headers**: All HTTP headers sent by AT
 - **Body**: Form data with `from`, `to`, `text`, `linkId`, `date`, `id`
 - **IP Address**: The IP address of AT's servers (save this for whitelisting!)
-
+x
 ### Step 5: Test Your Endpoint
 
 Once you understand the payload structure:

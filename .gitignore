@@ -43,10 +43,10 @@ QUICK_START.md
 instance/
 
 # Test files and temporary test data
-test_*.py
-*_test.py
+test_*
+*_test*
 tests/
-diagnose_*.py
+diagnose_*
 create_test_campaign.py
 *.log
 flask.log

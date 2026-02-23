@@ -1,0 +1,151 @@
+id,text,actual_label,category
+1,Hello! Your account has been suspended. Click here to verify: http://bit.ly/6h3jk,phishing,credential_theft
+2,Hi Sarah, this is John from HR. Just confirming our meeting tomorrow at 2pm.,legitimate,general
+3,URGENT: Your bank account will be closed. Update payment info now: http://bank-verify.xyz,phishing,financial_fraud
+4,Congratulations! You've won $1,000 voucher. Claim now: http://prize.click/abc123,phishing,social_engineering
+5,Mom, can you send me $50? Having car trouble.,legitimate,general
+6,You have BT bill to pay. Click here: http://invoice.update-now.com/bills,phishing,financial_fraud
+7,Thanks for shopping with us! Your order #12345 is confirmed.,legitimate,general
+8,ALERT: Unusual login from Nigeria. Verify identity: http://secure-verify.net,phishing,credential_theft
+9,Hey, let's grab lunch tomorrow? I'm free after 3.,legitimate,general
+10,Limited offer! iPhone 13 for only $99. Buy now: http://cheap-iphone.site/offer?utm=flash,phishing,social_engineering
+11,Your payment has been received. Receipt #RT-234782,legitimate,general
+12,URGENT SECURITY ALERT: Your Google account compromised. Reset password: http://accounts-google-verify.ru,phishing,credential_theft
+13,Meeting at 10am in conference room B. See you then!,legitimate,general
+14,PAYPAL: Confirm your account or it will be locked. http://paypal-update.top/confirm,phishing,credential_theft
+15,Your appointment reminder: Dr. Smith on Feb 28 at 3:30pm,legitimate,general
+16,AMAZON ALERT: Unauthorized purchase detected $299. Cancel here: http://amazon.verify-order.com/cancel,phishing,financial_fraud
+17,Thanks for being our customer! Here's your 20% discount code: THANK20,legitimate,general
+18,WARNING: Malware detected on your phone. Download antivirus: http://mobile-secure.site/download,phishing,social_engineering
+19,Call me when you get a chance about the project.,legitimate,general
+20,INSTANT LOAN! Get $10,000 today. No credit check. http://quickloan-approval.xyz/apply,phishing,financial_fraud
+21,Your delivery will arrive on Feb 23 between 2-8pm.,legitimate,general
+22,Verify Apple ID to protect your account: http://apple-id-verify.com/secure,phishing,credential_theft
+23,Project deadline extended to next Friday.,legitimate,general
+24,FREE IPHONE! You qualified! http://free-iphone-giveaway.net/claim?code=12345,phishing,social_engineering
+25,Your electricity bill is ready. Amount: KES 4,500,legitimate,general
+26,Netflix: Update payment method to continue. http://netflix-update.ml/billing,phishing,credential_theft
+27,Good morning! Just wanted to check in.,legitimate,general
+28,INSTAGRAM: Suspicious activity detected. Confirm password: http://instagram-verify.ru/account,phishing,credential_theft
+29,See you at the office tomorrow.,legitimate,general
+30,WESTERN UNION: Claim your money transfer. http://wu-claim-funds.top?ref=abc123,phishing,financial_fraud
+31,Your prescription is ready for pickup at Pharmacy.,legitimate,general
+32,Microsoft: Your account will be closed in 24 hours. Verify: http://microsoft-account-verify.tk,phishing,credential_theft
+33,Thanks for confirming. Looking forward to it!,legitimate,general
+34,AIRBNB: Confirm booking details: http://airbnb-verify.xyz/booking/123456,phishing,credential_theft
+35,Just finished the report and sent it to your email.,legitimate,general
+36,TWITTER: unusual login attempt from USA. Reset: http://twitter-security-verify.com,phishing,credential_theft
+37,Let me know if you need anything else.,legitimate,general
+38,FACEBOOK: Recover your account before it's deleted. http://fb-recovery.site/verify,phishing,credential_theft
+39,Event reminder: Conference on Saturday at 9am,legitimate,general
+40,URGENT: Your WhatsApp will be deleted. Verify: http://whatsapp-verify-now.ru/auth,phishing,credential_theft
+41,Your test results are available in the patient portal.,legitimate,general
+42,CHASE BANK: Verify account or card will be blocked. http://chase-verify-account.ml,phishing,financial_fraud
+43,Have a great day!,legitimate,general
+44,congratulations! You have been selected for a 99.9% refund. Claim: http://tax-refund-claim.xyz,phishing,financial_fraud
+45,Doctor appointment on March 5 at 10am. Bring insurance card.,legitimate,general
+46,LINKEDIN: Someone accessed your account. Change password: http://linkedin-security.ru/reset,phishing,credential_theft
+47,The meeting has been rescheduled to Thursday.,legitimate,general
+48,PAYONEER: Confirm identity verification: http://payoneer-verify.top/identity,phishing,credential_theft
+49,Your flight is booked. Confirmation #AF123456,legitimate,general
+50,SKRILL: Update payment method now. http://skrill-update.tk/billing,phishing,credential_theft
+51,Looking forward to the weekend!,legitimate,general
+52,BitCoin Alert: Claim your free coins here! http://bitcoin-faucet-bonus.site/claim,phishing,social_engineering
+53,Project meeting scheduled for Tuesday 2pm.,legitimate,general
+54,SANTA: Get free gift cards! http://free-gift-cards.xyz?offer=xmas,phishing,social_engineering
+55,See the attachment with all the details.,legitimate,general
+56,ALERT: Someone in Morocco accessed your Gmail. Verify: http://gmail-verify-secure.ru,phishing,credential_theft
+57,Thank you for your inquiry. We'll respond soon.,legitimate,general
+58,TINDER: Verify your account: http://tinder-verify.ml/login,phishing,credential_theft
+59,Call me tomorrow morning.,legitimate,general
+60,UBER: Confirm trip details: http://uber-verify.xyz/ride123,phishing,credential_theft
+61,Your blood test results came back normal.,legitimate,general
+62,FREE MONEY: Win cash every minute! http://instant-cash.site/play,phishing,social_engineering
+63,I'll send you the file by end of day.,legitimate,general
+64,WINDOWS: Your computer has a virus. Download fix: http://windows-security-alert.ru,phishing,social_engineering
+65,Reminder: Team lunch next Friday.,legitimate,general
+66,SECURE: Verify your banking credentials: http://banking-verify-secure.top,phishing,credential_theft
+67,Thanks for the feedback.,legitimate,general
+68,URGENT: Your account suspended for suspicious activity. http://verify-account-now.xyz,phishing,credential_theft
+69,Have you seen the new update?,legitimate,general
+70,AMAZON PAY: Verify payment method. http://amazon-pay-verify.ml,phishing,credential_theft
+71,Successfully logged in from new device.,legitimate,general
+72,BONUS: You have $500 pending. Claim now: http://bonus-claim.site/redeem,phishing,financial_fraud
+73,Can you review this document?,legitimate,general
+74,STEAM: Update account security. http://steam-verify.ru/account-security,phishing,credential_theft
+75,The contract has been signed and filed.,legitimate,general
+76,ETSY: Verify seller account. http://etsy-verify.xyz/seller,phishing,credential_theft
+77,Great work on the presentation!,legitimate,general
+78,UBER EATS: Confirm delivery address: http://uber-eats-verify.ml,phishing,credential_theft
+79,Let me know your availability for next week.,legitimate,general
+80,FOREX TRADING: Earn 5000% returns guaranteed! http://forex-millionaire.xyz,phishing,financial_fraud
+81,Your tax return has been filed.,legitimate,general
+82,DATING: Match with singles nearby! http://dating-app-premium.site,phishing,social_engineering
+83,See you at the gym tomorrow!,legitimate,general
+84,CLICK HERE: Win MacBook Pro free! http://macbook-giveaway.xyz?utm=mobile,phishing,social_engineering
+85,Semester grades have been posted.,legitimate,general
+86,WALMART: Verify account for online shopping: http://walmart-verify.ru,phishing,credential_theft
+87,I'll bring the documents to our meeting.,legitimate,general
+88,CRYPTOCURRENCY: Bitcoin dropped! Buy now for profit: http://crypto-trading-signal.site,phishing,financial_fraud
+89,Your insurance premium is due on the 25th.,legitimate,general
+90,VERIFY: Your Spotify account has unusual activity. http://spotify-verify.ml/account,phishing,credential_theft
+91,Thanks for supporting our business.,legitimate,general
+92,SCAM WARNING: act fast! Limited time offer! http://scam-alert-hidden.xyz,phishing,social_engineering
+93,Conference is confirmed for next month.,legitimate,general
+94,REDDIT: Confirm identity verification. http://reddit-verify.ru/auth,phishing,credential_theft
+95,Have a safe trip!,legitimate,general
+96,DISCORD: Verify your account ownership. http://discord-verify.xyz/identity,phishing,credential_theft
+97,Grades for the final exam are available.,legitimate,general
+98,PORN: Free premium access! http://adult-site-scam.xyz?offer=free,phishing,social_engineering
+99,See page 5 for the summary.,legitimate,general
+100,BOOKING: Confirm hotel reservation. http://booking-verify.ml/hotel123,phishing,credential_theft
+101,Your insurance claim has been approved.,legitimate,general
+102,DROPBOX: Verify account. http://dropbox-verify.ru/auth,phishing,credential_theft
+103,The quarterly report is ready.,legitimate,general
+104,EBAY: Update payment for bid. http://ebay-verify.xyz/payment,phishing,credential_theft
+105,Thanks for attending the webinar.,legitimate,general
+106,FREE MONEY TRANSFER: Receive $5000 instantly! http://moneytransfer-scam.site,phishing,financial_fraud
+107,Can you work the shift on Saturday?,legitimate,general
+108,GITHUB: Verify commit access. http://github-verify.ru/access,phishing,credential_theft
+109,The issue has been resolved.,legitimate,general
+110,PINTEREST: Verify account access. http://pinterest-verify.ml,phishing,credential_theft
+111,Your package has been delivered.,legitimate,general
+112,MAILCHIMP: Verify email campaign. http://mailchimp-verify.xyz/campaign,phishing,credential_theft
+113,Looking forward to working with you.,legitimate,general
+114,TWITCH: Verify streaming account. http://twitch-verify.ru/streamer,phishing,credential_theft
+115,The contract is attached below.,legitimate,general
+116,SNAPCHAT: Verify account. http://snapchat-verify.ml/auth,phishing,credential_theft
+117,See you next week!,legitimate,general
+118,YAHOO: Update account security. http://yahoo-verify.xyz/security,phishing,credential_theft
+119,Your reservation is confirmed.,legitimate,general
+120,DATING SCAM: Beautiful women want to meet you! http://fake-dating-profile.site,phishing,social_engineering
+121,The team meeting went well.,legitimate,general
+122,CRAIGSLIST: Verify seller account. http://craigslist-verify.ru,phishing,credential_theft
+123,I'm excited about the project!,legitimate,general
+124,ZILLOW: Verify property listing. http://zillow-verify.ml/property,phishing,credential_theft
+125,Your student loan application is pending.,legitimate,general
+126,INDEED: Update job application. http://indeed-verify.xyz/job,phishing,credential_theft
+127,Thanks for your business.,legitimate,general
+128,MONSTER: Verify recruiter account. http://monster-verify.ru/recruiter,phishing,credential_theft
+129,The presentation slides are ready.,legitimate,general
+130,CAREERBUILDER: Verify job posting. http://careerbuilder-verify.ml,phishing,credential_theft
+131,Good luck with your interview!,legitimate,general
+132,GLASSDOOR: Verify review. http://glassdoor-verify.xyz/review,phishing,credential_theft
+133,Your promotion has been approved.,legitimate,general
+134,LINKEDIN PREMIUM: Claim free trial. http://linkedin-premium-free.site,phishing,credential_theft
+135,The meeting materials are in your inbox.,legitimate,general
+136,INSTAGRAM FOLLOWERS: Get 10K followers instantly! http://instagram-followers-scam.xyz,phishing,social_engineering
+137,See the updated spreadsheet.,legitimate,general
+138,TIKTOK: Verify creator account. http://tiktok-verify.ru/creator,phishing,credential_theft
+139,Your bonus has been deposited.,legitimate,general
+140,YOUTUBE: Verify monetization. http://youtube-verify.ml/monetize,phishing,credential_theft
+141,The report has been completed.,legitimate,general
+142,TWITCH PRIME: Get free games! http://twitch-free-games.xyz,phishing,social_engineering
+143,I'll respond to your email shortly.,legitimate,general
+144,DISCORD NITRO: Get free premium! http://discord-nitro-free.site,phishing,social_engineering
+145,Your flight has been confirmed.,legitimate,general
+146,ROBLOX: Verify account. http://roblox-verify.ru,phishing,credential_theft
+147,The project deadline is extended.,legitimate,general
+148,MINECRAFT: Update launcher. http://minecraft-verify.ml,phishing,credential_theft
+149,Thanks for the great collaboration.,legitimate,general
+150,FORTNITE: Claim free V-Bucks! http://fortnite-free-vbucks.xyz,phishing,social_engineering

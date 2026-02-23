@@ -15,7 +15,7 @@ africastalking==1.2.6
 google-cloud-aiplatform==1.38.1
 
 # Option 2: Gemini API SDK (for development/testing)
-google-genai==0.1.2
+google-genai==1.0.0
 
 # Database
 SQLAlchemy==2.0.23
@@ -32,4 +32,9 @@ tweepy==4.14.0
 
 # Utilities
 python-dateutil==2.8.2
+
+# Data science & visualization (for evaluation reports)
+matplotlib==3.10.0
+scikit-learn==1.4.2
+numpy==1.26.4
 
