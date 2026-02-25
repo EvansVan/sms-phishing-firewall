@@ -64,20 +64,18 @@ gcloud run services describe sms-firewall --region us-central1 --format='value(s
 **Git Branch Strategy:**
 - `main` branch = Your full repository (all code, tests gitignored)
   - Push to Github
-  - Judges see this when they clone
+  - Judges see this when they clone (default branch)
   - Contains all production code
-- `production` branch = Clean deployment version (for Cloud Run only)
-  - Used only for GCP/Cloud Run deployment
+- `production` branch = Clean deployment version (for Cloud Run)
+  - Used for GCP/Cloud Run deployment
   - Removes test files from git tracking
-  - Never push to Github
+  - Can be pushed to Github (optional, exists as alternative branch)
   
 **Why this works:**
-- Main stays intact for Github (no weird deletions)
-- Production is a clean deployment branch
+- Main stays complete for judges (what they see first)
+- Production is cleaner for deployment if needed
 - Test files are gitignored on main anyway
-
-### Step 1.2: Create Production Branch for Deployment
-
+- Both branches can exist on Github - judges just see main by default
 ```bash
 cd ~/Desktop/AT\ \&\ Gemini/sms-phishing-firewall
 
@@ -153,19 +151,21 @@ git branch -a
 # * production
 ```
 
-### Step 1.6: Push Main to Github
+### Step 1.6: Push to Github
 
 ```bash
-# Push only main to Github (your public repository)
+# Push main (your primary repository)
 git push origin main
 
-# Do NOT push production to Github (it's local only for deployment)
+# Optionally push production (if you want it as backup on Github)
+git push origin production
 
-# Verify
+# Verify both branches on remote
 git branch -r
 # Should show:
-#   origin/main (your repo)
-# (no production there)
+#   origin/HEAD -> origin/main (default)
+#   origin/main (your full code)
+#   origin/production (optional, clean version)
 
 ### Step 1.5: Verify Environment Files
 
@@ -224,7 +224,7 @@ git push origin main
 
 This ensures judges clone the full main branch by default.
 
-**✅ Phase 1 Complete:** 
+**✅ Phase 1 Complete:**
 - `main` branch pushed to Github (complete code, tests gitignored)
 - `production` branch ready locally for Cloud Run deployment
 
@@ -539,12 +539,15 @@ git checkout main
 # Check what's on remote
 git branch -r
 # Should show:
-#   origin/main (your public repo)
-# (no production remote)
+#   origin/HEAD -> origin/main (default branch)
+#   origin/main (your full code)
+#   origin/production (optional, clean version)
 
 # Verify main pushed correctly
 git log origin/main -1
 # Should show your latest commit
+
+# Note: Judges will clone main by default (origin/HEAD points there)
 ```
 
 ### Cloud Run Deployment Verification
@@ -582,10 +585,10 @@ git checkout main
 
 | Problem | Solution |
 |---------|----------|
-| Main branch missing files | Don't worry, switch to `main` branch - files are there, just gitignored on production |
+| Main branch missing files | Don't worry, switch to `main` branch - files are there, just gitignored |
 | Production branch missing files | Expected! Production branch has deletions. Switch to `main` to see everything. |
 | Can't switch branches | You have uncommitted changes: `git stash` or `git commit -m "WIP"` first |
-| Git push fails | Only push `main`: `git push origin main`. Don't push `production`. |
+| Both branches on Github | That's fine! Judges will clone main by default (it's the default branch). They can check production if interested. |
 | .env file accidentally committed | Run: `git rm --cached .env && echo .env >> .gitignore && git commit -m "Remove .env"` |
 
 ### Colab Issues
@@ -689,11 +692,11 @@ Today:
 3. **Share with judges:**
    - Colab link
    - Cloud Run URL
-   - Github repo link (`main` branch)
+   - Github repo link (`main` branch) — judges will see this by default
 
 4. **Monitor in production:**
    ```bash
    gcloud run services logs read sms-firewall --follow
    ```
 
-Good luck! 🚀
+**Note:** Both `main` and `production` branches can exist on Github. Judges will see `main` by default (it's the default branch). They can optionally explore the `production` branch if interested in deployment optimization.
