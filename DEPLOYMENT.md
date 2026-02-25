@@ -21,20 +21,23 @@ Run these commands in order:
 ```bash
 cd ~/Desktop/AT\ \&\ Gemini/sms-phishing-firewall
 
-# PHASE 1: Setup branches
-git branch dev                      # Create backup branch
-git checkout main
+# PHASE 1: Setup branches (production branch for deployment)
+git checkout main                          # Start on main
+git branch production                      # Create production branch
+git checkout production                    # Switch to production
 rm -f test_*.py test_*.md GETTING_STARTED.md QUICK_START.md WEBHOOK_SECURITY.md
 rm -f scripts/demo_evaluation.py scripts/seed_data.py create_test_campaign.py
 rm -rf instance/
 git add -A
-git commit -m "Production: Remove dev/test files for Cloud Run"
+git commit -m "Deployment: Clean version for Cloud Run (production branch)"
+git checkout main                          # Back to main
+
+# PHASE 1B: Push main to Github (your primary repo)
 git push origin main
-git push -u origin dev
 
 # PHASE 2: Colab (manual steps at Step 2.1 below)
 
-# PHASE 3: Cloud Run
+# PHASE 3: Cloud Run (deploy from production branch)
 gcloud auth login
 gcloud projects create sms-phishing-firewall
 gcloud config set project sms-phishing-firewall
@@ -44,6 +47,7 @@ echo -n "your-gemini-key" | gcloud secrets create GEMINI_API_KEY --data-file=-
 echo -n "your-at-key" | gcloud secrets create AT_API_KEY --data-file=-
 echo -n "sandbox" | gcloud secrets create AT_USERNAME --data-file=-
 
+git checkout production                    # Switch to production branch
 chmod +x scripts/deploy_cloud_run.sh
 ./scripts/deploy_cloud_run.sh sms-phishing-firewall sms-firewall us-central1
 
@@ -58,31 +62,44 @@ gcloud run services describe sms-firewall --region us-central1 --format='value(s
 ### Step 1.1: Understand the Strategy
 
 **Git Branch Strategy:**
-- `main` branch = Clean, production-ready code (for judges & deployment)
-- `dev` branch = Complete code with tests (backup & reference)
+- `main` branch = Your full repository (all code, tests gitignored)
+  - Push to Github
+  - Judges see this when they clone
+  - Contains all production code
+- `production` branch = Clean deployment version (for Cloud Run only)
+  - Used only for GCP/Cloud Run deployment
+  - Removes test files from git tracking
+  - Never push to Github
+  
+**Why this works:**
+- Main stays intact for Github (no weird deletions)
+- Production is a clean deployment branch
+- Test files are gitignored on main anyway
 
-This approach keeps judges focused on production code while keeping everything accessible.
-
-### Step 1.2: Create Development Backup Branch
+### Step 1.2: Create Production Branch for Deployment
 
 ```bash
 cd ~/Desktop/AT\ \&\ Gemini/sms-phishing-firewall
 
-# Create dev branch as backup of current state
-git branch dev
+# Make sure you're on main (your full code)
+git checkout main
 
-# Verify it was created
-git branch -a
-# Output should show:
-#   dev
-# * main
+# Create production branch from main (for deployment only)
+git branch production
+
+# Switch to production
+git checkout production
+
+# Verify you're on production
+git branch --show-current
+# Should output: production
 ```
 
-### Step 1.3: Clean Files on Main Branch
+### Step 1.3: Clean Files on Production Branch
 
 ```bash
-# Make sure you're on main
-git checkout main
+# Only delete files from the production branch (not main)
+# These deletions stay on production, main is untouched
 
 # Remove test files
 rm -f test_*.py test_*.md *_test.py
@@ -96,28 +113,59 @@ rm -f scripts/demo_evaluation.py scripts/seed_data.py create_test_campaign.py
 # Remove database artifacts (will regenerate on Cloud Run)
 rm -rf instance/
 
-# Verify what was deleted
+# Verify what will be deleted
 git status
 # Should show files under "Changes not staged for commit"
 ```
 
-### Step 1.4: Create Commit
+### Step 1.4: Commit Cleanup on Production Branch
 
 ```bash
-# Stage all deletions
+# Stage all deletions (only on production branch)
 git add -A
 
 # Commit with clear message
-git commit -m "Production: Remove dev/test files for Cloud Run deployment
+git commit -m "Deployment: Clean version for Cloud Run
 
 - Remove test_*.py, test_*.md (all test files)
 - Remove GETTING_STARTED.md, QUICK_START.md, WEBHOOK_SECURITY.md
 - Remove dev-only scripts (demo_evaluation.py, seed_data.py, create_test_campaign.py)
 - Clean up database artifacts (instance/ directory)
 
-This branch (main) contains only production-ready code.
-Complete test suite and dev files available on dev branch."
+This is the production branch for Cloud Run deployment.
+Main branch remains unchanged with all files."
 ```
+
+### Step 1.5: Return to Main Branch
+
+```bash
+# Switch back to main (stays untouched)
+git checkout main
+
+# Verify main still has everything
+git ls-files | grep -i "GETTING_STARTED\|test_at"
+# Should show files (they're here, just gitignored)
+
+# See your branches
+git branch -a
+# Should show:
+#   main
+# * production
+```
+
+### Step 1.6: Push Main to Github
+
+```bash
+# Push only main to Github (your public repository)
+git push origin main
+
+# Do NOT push production to Github (it's local only for deployment)
+
+# Verify
+git branch -r
+# Should show:
+#   origin/main (your repo)
+# (no production there)
 
 ### Step 1.5: Verify Environment Files
 
@@ -164,23 +212,7 @@ EOF
 
 git add .env.example
 git commit -m "Add .env.example template"
-```
-
-### Step 1.6: Push Both Branches to Github
-
-```bash
-# Push main (production-clean)
 git push origin main
-
-# Push dev (with all files as backup)
-git push -u origin dev
-
-# Verify both exist on remote
-git branch -r
-# Should show:
-#   origin/HEAD -> origin/main
-#   origin/dev
-#   origin/main
 ```
 
 ### Step 1.7: (Optional) Set Default Branch on Github
@@ -190,9 +222,11 @@ git branch -r
 3. Under "Default branch": select **main**
 4. Click: **Update**
 
-This ensures judges see production-clean code by default.
+This ensures judges clone the full main branch by default.
 
-**✅ Phase 1 Complete:** Repository has two safe branches—`main` (production) and `dev` (full code)
+**✅ Phase 1 Complete:** 
+- `main` branch pushed to Github (complete code, tests gitignored)
+- `production` branch ready locally for Cloud Run deployment
 
 ---
 
@@ -473,49 +507,68 @@ gcloud run services logs read sms-firewall --region us-central1 --limit 50
 ### Repository Verification
 
 ```bash
-# Verify branch setup
+# Verify both branches exist locally
 git branch -a
-# Should show both main and dev
+# Should show:
+#   main
+# * production (or whichever you're on)
 
-# Verify main is clean
+# Verify main is NOT cleaned (has all files)
 git checkout main
-git ls-files | grep -i test
-# Should return nothing (no test files)
+git ls-files | wc -l
+# Should show ~50+ files (all of them)
 
-# Verify dev has everything
-git checkout dev
-git ls-files | grep -i test
-# Should show test files
+git ls-files | grep GETTING_STARTED
+# Should show the file in git history
 
-# Switch back to main
+# Verify production is clean (removes test files from git)
+git checkout production
+git ls-files | wc -l
+# Should show fewer files (~35-40, no tests)
+
+git ls-files | grep test_
+# Should return nothing (test files removed from production)
+
+# Switch back to main for daily work
 git checkout main
 ```
 
-### Cloud Run Verification
+### Github Verification
 
 ```bash
-# Check service status
-gcloud run services describe sms-firewall --region us-central1
+# Check what's on remote
+git branch -r
+# Should show:
+#   origin/main (your public repo)
+# (no production remote)
 
-# Test basic endpoint
-SERVICE_URL=$(gcloud run services describe sms-firewall \
-  --region us-central1 \
-  --format='value(status.url)')
+# Verify main pushed correctly
+git log origin/main -1
+# Should show your latest commit
+```
 
-curl $SERVICE_URL/
+### Cloud Run Deployment Verification
 
-# Check logs for errors
-gcloud logging read "resource.type=cloud_run_revision" --limit 20
+```bash
+# When ready to deploy, switch to production
+git checkout production
+
+# Deploy from production branch
+./scripts/deploy_cloud_run.sh sms-phishing-firewall sms-firewall us-central1
+
+# After deployment, go back to main for regular work
+git checkout main
 ```
 
 ### What Should Be Ready
 
-- [ ] `main` branch is clean (no test files)
-- [ ] `dev` branch has all files (backup)
-- [ ] Both branches pushed to Github
+- [ ] `main` branch has all files (pushed to Github)
+- [ ] `production` branch is clean (local only)
+- [ ] Both branches exist locally
+- [ ] Only `main` on Github remote
 - [ ] Colab notebook created and shared
 - [ ] Colab runs without errors
-- [ ] Cloud Run service deployed
+- [ ] Cloud Run service deployed (from production)
 - [ ] Cloud Run URL accessible
 - [ ] Webhook endpoint responds
 - [ ] Africa's Talking webhook configured
@@ -529,10 +582,11 @@ gcloud logging read "resource.type=cloud_run_revision" --limit 20
 
 | Problem | Solution |
 |---------|----------|
-| Test files still on main | `git checkout main && git status` - if files show, delete them again and commit |
-| Can't switch branches | You have uncommitted changes: `git stash` or `git commit -m "WIP"` |
-| dev branch missing | Create it: `git branch dev` |
-| Git push fails | Check: `git remote -v` shows correct Github URL |
+| Main branch missing files | Don't worry, switch to `main` branch - files are there, just gitignored on production |
+| Production branch missing files | Expected! Production branch has deletions. Switch to `main` to see everything. |
+| Can't switch branches | You have uncommitted changes: `git stash` or `git commit -m "WIP"` first |
+| Git push fails | Only push `main`: `git push origin main`. Don't push `production`. |
+| .env file accidentally committed | Run: `git rm --cached .env && echo .env >> .gitignore && git commit -m "Remove .env"` |
 
 ### Colab Issues
 
@@ -565,22 +619,23 @@ gcloud logging read "resource.type=cloud_run_revision" --limit 20
 
 ## File Reference
 
-| File | Purpose | Keep? |
-|------|---------|-------|
-| `app/` | Core Flask application | ✅ Always |
-| `scripts/` | Deployment scripts | ✅ Always |
-| `Dockerfile` | Container definition | ✅ Always |
-| `cloudbuild.yaml` | GCP CI/CD config | ✅ Always |
-| `requirements.txt` | Python dependencies | ✅ Always |
-| `.env.example` | Template for secrets | ✅ Always |
-| `README.md`, `DEPLOYMENT.md` | Docs | ✅ Always |
-| `test_*.py` | Test files | ❌ Remove from `main` |
-| `GETTING_STARTED.md` | Dev guide | ❌ Remove from `main` |
-| `scripts/demo_*.py` | Demo scripts | ❌ Remove from `main` |
-| `instance/` | Local database | ❌ Remove (regenerates) |
+| File | Purpose | On Main | On Production |
+|------|---------|---------|---------------|
+| `app/` | Core Flask application | ✅ | ✅ |
+| `scripts/evaluate_ai.py`, `init_db.py` | Core scripts | ✅ | ✅ |
+| `Dockerfile` | Container definition | ✅ | ✅ |
+| `cloudbuild.yaml` | GCP CI/CD config | ✅ | ✅ |
+| `requirements.txt` | Python dependencies | ✅ | ✅ |
+| `.env.example` | Template for secrets | ✅ | ✅ |
+| `README.md`, `DEPLOYMENT.md` | Docs | ✅ | ✅ |
+| `test_*.py` | Test files | ✅ (gitignored) | ❌ Deleted |
+| `GETTING_STARTED.md` | Dev guide | ✅ | ❌ Deleted |
+| `scripts/demo_*.py` | Demo scripts | ✅ | ❌ Deleted |
+| `instance/` | Local database | ✅ (gitignored) | ❌ Deleted |
 
-**On `main` branch:** Only essentials
-**On `dev` branch:** Everything (full history)
+**Branch Strategy:**
+- `main` = Full code, test files gitignored (what you push to Github & judges clone)
+- `production` = Deployment-ready, test files deleted from git (local use only for Cloud Run)
 
 ---
 
@@ -591,7 +646,9 @@ gcloud logging read "resource.type=cloud_run_revision" --limit 20
 > 1. **Google Colab** — Click this link and press 'Run All' to see live AI analysis (no setup needed)
 > 2. **Google Cloud Run** — Live production endpoint analyzing real SMS in real-time
 >
-> The code is clean and production-ready on the main branch. Complete test suite is available on the dev branch if you want to explore."
+> The main repository branch has all the code (test files are gitignored). The production branch is used only for Cloud Run deployment with test artifacts removed.
+>
+> Full code and tests are available in the repository for reference."
 
 ---
 
@@ -599,30 +656,42 @@ gcloud logging read "resource.type=cloud_run_revision" --limit 20
 
 ```
 Today:
-  0:00 - 0:30   Phase 1: Setup git branches (dev + main)
+  0:00 - 0:30   Phase 1: Create production branch (keep main as-is)
   0:30 - 1:00   Phase 2: Create & test Colab notebook
-  1:00 - 2:00   Phase 3: Deploy to Cloud Run
+  1:00 - 2:00   Phase 3: Deploy to Cloud Run (from production)
   2:00 - 2:15   Verify everything works
   2:15+         Ready for judges!
 ```
+
+**After deployment:**
+- Main branch stays for daily development
+- Switch to production branch when deploying to Cloud Run
+- Only push main to Github
 
 ---
 
 ## Next Steps
 
-1. **Clone fresh copy** (optional):
+1. **Daily development:**
    ```bash
-   git clone https://github.com/your-username/sms-phishing-firewall.git
-   cd sms-phishing-firewall
-   git checkout main  # Production-clean version
+   git checkout main
+   # Do all your work here, commit normally
+   git push origin main
    ```
 
-2. **Share with judges:**
+2. **When ready to deploy to Cloud Run:**
+   ```bash
+   git checkout production
+   # Deploy from this branch
+   ./scripts/deploy_cloud_run.sh sms-phishing-firewall sms-firewall us-central1
+   ```
+
+3. **Share with judges:**
    - Colab link
    - Cloud Run URL
-   - Github repo link
+   - Github repo link (`main` branch)
 
-3. **Monitor in production:**
+4. **Monitor in production:**
    ```bash
    gcloud run services logs read sms-firewall --follow
    ```
