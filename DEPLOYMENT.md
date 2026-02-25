@@ -308,7 +308,7 @@ except:
    ```bash
    # macOS
    brew install google-cloud-sdk
-   
+
    # Or download: https://cloud.google.com/sdk/docs/install
    ```
 3. **Verify installation:**
@@ -579,7 +579,7 @@ gcloud logging read "resource.type=cloud_run_revision" --limit 20
 | `scripts/demo_*.py` | Demo scripts | ❌ Remove from `main` |
 | `instance/` | Local database | ❌ Remove (regenerates) |
 
-**On `main` branch:** Only essentials  
+**On `main` branch:** Only essentials
 **On `dev` branch:** Everything (full history)
 
 ---
