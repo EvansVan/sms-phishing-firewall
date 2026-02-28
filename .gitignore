@@ -34,6 +34,7 @@ ATXGCP/
 
 # Docs (requested to ignore)
 *.md
+!README.md
 GETTING_STARTED.md
 QUICK_START.md
 
