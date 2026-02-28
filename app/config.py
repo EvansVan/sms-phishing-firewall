@@ -27,7 +27,8 @@ class Config:
 
     # Google Gemini / Vertex AI
     GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
-    GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-1.5-flash')
+    GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-2.0-flash')
+    GEMINI_MODEL_CANDIDATES = os.getenv('GEMINI_MODEL_CANDIDATES', '')
     USE_VERTEX_AI = os.getenv('USE_VERTEX_AI', 'false').lower() == 'true'
 
     # Vertex AI specific (if using GCP)

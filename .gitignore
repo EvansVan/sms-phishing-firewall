@@ -33,6 +33,7 @@ ATXGCP/
 .env.*.local
 
 # Docs (requested to ignore)
+*.md
 GETTING_STARTED.md
 QUICK_START.md
 
