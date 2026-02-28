@@ -35,6 +35,7 @@ ATXGCP/
 # Docs (requested to ignore)
 *.md
 !README.md
+!EVALUATION_METHODOLOGY.md
 GETTING_STARTED.md
 QUICK_START.md
 
