@@ -4,7 +4,7 @@ Gemini AI Analyzer for threat detection.
 import importlib
 import json
 import logging
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Iterable
 from flask import current_app
 
 logger = logging.getLogger(__name__)
@@ -49,6 +49,8 @@ class GeminiAnalyzer:
         """Build ordered list of model candidates for Gemini API fallback."""
         configured_candidates = current_app.config.get('GEMINI_MODEL_CANDIDATES', '')
         fallback_models = [
+            'gemini-flash-latest',
+            'gemini-2.5-flash',
             'gemini-2.0-flash',
             'gemini-2.0-flash-lite',
             'gemini-1.5-flash',
@@ -56,13 +58,14 @@ class GeminiAnalyzer:
             'gemini-1.5-pro'
         ]
 
-        candidates = []
+        candidates: List[str] = []
+
         if self.model_name:
-            candidates.append(self.model_name)
+            candidates.append(self._normalize_model_name(self.model_name))
 
         if configured_candidates:
             for model in configured_candidates.split(','):
-                model = model.strip()
+                model = self._normalize_model_name(model)
                 if model and model not in candidates:
                     candidates.append(model)
 
@@ -71,6 +74,75 @@ class GeminiAnalyzer:
                 candidates.append(model)
 
         return candidates
+
+    @staticmethod
+    def _normalize_model_name(model_name: str) -> str:
+        """Normalize model IDs to the format expected by generate_content."""
+        normalized = (model_name or '').strip()
+        if normalized.startswith('models/'):
+            return normalized.split('/', 1)[1]
+        return normalized
+
+    @staticmethod
+    def _model_supports_generation(model_obj) -> bool:
+        """Check whether a model supports content generation across SDK versions."""
+        supported_actions = getattr(model_obj, 'supported_actions', None) or []
+        supported_methods = getattr(model_obj, 'supported_generation_methods', None) or []
+        if any(action == 'generateContent' for action in supported_actions):
+            return True
+        return any(method == 'generateContent' for method in supported_methods)
+
+    def _discover_api_models(self) -> List[str]:
+        """Discover available Gemini API models that can generate content."""
+        try:
+            listed_models: Iterable = self.client.models.list()
+        except Exception as e:
+            logger.warning(f"Could not list Gemini models, using static fallbacks: {e}")
+            return []
+
+        discovered: List[str] = []
+        for model_obj in listed_models:
+            if not self._model_supports_generation(model_obj):
+                continue
+
+            normalized_name = self._normalize_model_name(getattr(model_obj, 'name', ''))
+            if not normalized_name:
+                continue
+
+            if normalized_name not in discovered:
+                discovered.append(normalized_name)
+
+        return discovered
+
+    def _refresh_model_candidates(self):
+        """Merge static candidates with runtime-discovered models and rank by preference."""
+        base_candidates = self._build_model_candidates()
+        discovered = self._discover_api_models()
+
+        merged: List[str] = []
+        for model in [*base_candidates, *discovered]:
+            model = self._normalize_model_name(model)
+            if model and model not in merged:
+                merged.append(model)
+
+        priority_hints = [
+            'flash-latest',
+            '2.5-flash',
+            '2.0-flash',
+            'flash',
+            'pro'
+        ]
+
+        def model_priority(model: str):
+            hint_rank = len(priority_hints)
+            for idx, hint in enumerate(priority_hints):
+                if hint in model:
+                    hint_rank = idx
+                    break
+            return (hint_rank, model)
+
+        merged.sort(key=model_priority)
+        return merged
 
     def _init_vertex_ai(self):
         """Initialize Vertex AI client."""
@@ -99,6 +171,11 @@ class GeminiAnalyzer:
             raise ValueError("GEMINI_API_KEY required")
 
         self.client = genai.Client(api_key=api_key)
+        self.model_candidates = self._refresh_model_candidates()
+
+        if self.model_name not in self.model_candidates:
+            self.model_candidates.insert(0, self.model_name)
+
         logger.info(f"Initialized Gemini API SDK with preferred model: {self.model_name}")
 
     def analyze_message(
