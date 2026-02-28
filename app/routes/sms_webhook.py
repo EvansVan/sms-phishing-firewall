@@ -110,6 +110,12 @@ def handle_sms_webhook():
         webhook_data = local_sms_service.parse_webhook_data(request.form)
         reporter_phone = webhook_data.get('from', '')
         message_text = webhook_data.get('text', '')
+        reported_sender_raw = (
+            request.form.get('originalSender', '')
+            or request.form.get('original_sender', '')
+            or request.form.get('scammerPhone', '')
+            or request.form.get('scammer_phone', '')
+        )
 
         # Validate input
         phone_valid, phone_error = validate_phone_number(reporter_phone)
@@ -129,9 +135,22 @@ def handle_sms_webhook():
         detected_urls = extract_urls(message_text)
         detected_phones = extract_phone_numbers(message_text)
         normalized_reporter_phone = normalize_phone_number(reporter_phone)
+        reported_sender = normalize_phone_number(reported_sender_raw)
+
+        if reported_sender_raw and not reported_sender:
+            response_msg = (
+                "⚠️ The sender phone number you provided is invalid. "
+                "Use +2547XXXXXXXX, 07XXXXXXXX, or 2547XXXXXXXX format."
+            )
+            local_sms_service.send_sms(response_msg, [reporter_phone])
+            return jsonify({
+                'status': 'ok',
+                'action': 'invalid_sender_phone',
+                'message': 'Invalid reported scammer phone number format'
+            }), 200
 
         # Check blacklist first
-        original_sender = next(
+        original_sender = reported_sender or next(
             (phone for phone in detected_phones if phone != normalized_reporter_phone),
             None
         )
@@ -145,7 +164,8 @@ def handle_sms_webhook():
             local_sms_service.send_sms(response_msg, [reporter_phone])
             return jsonify({
                 'status': 'ok',
-                'action': 'missing_sender_phone'
+                'action': 'missing_sender_phone',
+                'message': 'Missing scammer sender phone number in report'
             }), 200
 
         if original_sender and BlacklistService.is_entity_blacklisted(phone_number=original_sender):
