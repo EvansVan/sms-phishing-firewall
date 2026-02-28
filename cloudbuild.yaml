@@ -1,0 +1,33 @@
+# Google Cloud Build configuration for CI/CD
+steps:
+  # Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/sms-phishing-firewall:$SHORT_SHA', '.']
+
+  # Push to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/sms-phishing-firewall:$SHORT_SHA']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'sms-phishing-firewall'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/sms-phishing-firewall:$SHORT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--set-env-vars'
+      - 'FLASK_ENV=production'
+
+images:
+  - 'gcr.io/$PROJECT_ID/sms-phishing-firewall:$SHORT_SHA'
+
+options:
+  machineType: 'N1_HIGHCPU_8'
+
