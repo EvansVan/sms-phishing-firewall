@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document explains the comprehensive evaluation framework used to assess the performance and reliability of the SMS Phishing Detection AI. The evaluation is designed to be transparent, reproducible, and competition-ready.
+This document explains the comprehensive evaluation framework used to assess the performance and reliability of the SMS Phishing Detection AI. The evaluation is designed to be transparent, reproducible, and production-ready.
 
 ---
 
