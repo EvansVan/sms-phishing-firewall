@@ -135,6 +135,18 @@ def handle_sms_webhook():
             (phone for phone in detected_phones if phone != normalized_reporter_phone),
             None
         )
+
+        if not original_sender:
+            response_msg = (
+                "⚠️ Please include the sender phone number in the SMS you report "
+                "(e.g., 'From: +2547XXXXXXXX ...') so we can trace and blacklist the scammer."
+            )
+            local_sms_service.send_sms(response_msg, [reporter_phone])
+            return jsonify({
+                'status': 'ok',
+                'action': 'missing_sender_phone'
+            }), 200
+
         if original_sender and BlacklistService.is_entity_blacklisted(phone_number=original_sender):
             response_msg = "⚠️ This sender is already blacklisted. Thank you for reporting!"
             local_sms_service.send_sms(response_msg, [reporter_phone])
