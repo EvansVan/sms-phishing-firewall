@@ -5,6 +5,33 @@ import re
 from typing import Optional, Tuple
 
 
+def normalize_phone_number(phone: str) -> str:
+    """
+    Normalize Kenyan phone number to E.164 format (+254XXXXXXXXX).
+
+    Args:
+        phone: Raw phone number
+
+    Returns:
+        Normalized phone number, or empty string if invalid/empty
+    """
+    if not phone:
+        return ""
+
+    cleaned = re.sub(r'[^\d+]', '', phone.strip())
+
+    if cleaned.startswith('+254') and len(cleaned) == 13:
+        return cleaned
+    if cleaned.startswith('254') and len(cleaned) == 12:
+        return f'+{cleaned}'
+    if cleaned.startswith('0') and len(cleaned) == 10:
+        return f'+254{cleaned[1:]}'
+    if re.fullmatch(r'[17]\d{8}', cleaned):
+        return f'+254{cleaned}'
+
+    return ""
+
+
 def validate_phone_number(phone: str) -> Tuple[bool, Optional[str]]:
     """
     Validate phone number format (Kenyan format).
@@ -88,17 +115,17 @@ def extract_phone_numbers(text: str) -> list:
     Returns:
         List of found phone numbers
     """
-    # Pattern for Kenyan phone numbers
-    phone_pattern = r'(\+?254|0)?[17]\d{8}'
-    phones = re.findall(phone_pattern, text)
-    # Clean up matches
-    cleaned_phones = []
-    for phone in phones:
-        if isinstance(phone, tuple):
-            phone = ''.join(phone)
-        if phone:
-            cleaned_phones.append(phone)
-    return cleaned_phones
+    # Pattern for full Kenyan phone numbers (avoid partial capture groups)
+    phone_pattern = r'(?<!\d)(?:\+254|254|0)?[17]\d{8}(?!\d)'
+    matches = re.findall(phone_pattern, text)
+
+    normalized_phones = []
+    for match in matches:
+        normalized = normalize_phone_number(match)
+        if normalized and normalized not in normalized_phones:
+            normalized_phones.append(normalized)
+
+    return normalized_phones
 
 
 def sanitize_text(text: str) -> str:

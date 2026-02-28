@@ -14,6 +14,7 @@ from app.utils.validators import (
     validate_sms_text,
     extract_urls,
     extract_phone_numbers,
+    normalize_phone_number,
     sanitize_text
 )
 from app.utils.formatters import format_analysis_response
@@ -127,9 +128,13 @@ def handle_sms_webhook():
         # Extract URLs and phone numbers
         detected_urls = extract_urls(message_text)
         detected_phones = extract_phone_numbers(message_text)
+        normalized_reporter_phone = normalize_phone_number(reporter_phone)
 
         # Check blacklist first
-        original_sender = detected_phones[0] if detected_phones else None
+        original_sender = next(
+            (phone for phone in detected_phones if phone != normalized_reporter_phone),
+            None
+        )
         if original_sender and BlacklistService.is_entity_blacklisted(phone_number=original_sender):
             response_msg = "⚠️ This sender is already blacklisted. Thank you for reporting!"
             local_sms_service.send_sms(response_msg, [reporter_phone])
