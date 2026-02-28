@@ -18,15 +18,22 @@ def normalize_phone_number(phone: str) -> str:
     if not phone:
         return ""
 
-    cleaned = re.sub(r'[^\d+]', '', phone.strip())
+    cleaned = re.sub(r'\D', '', phone.strip())
 
-    if cleaned.startswith('+254') and len(cleaned) == 13:
-        return cleaned
-    if cleaned.startswith('254') and len(cleaned) == 12:
+    # Accept +2547XXXXXXXX / +2541XXXXXXXX (after removing '+')
+    if len(cleaned) == 12 and cleaned.startswith('254') and cleaned[3] in {'1', '7'}:
         return f'+{cleaned}'
-    if cleaned.startswith('0') and len(cleaned) == 10:
+
+    # Accept 07XXXXXXXX / 01XXXXXXXX
+    if len(cleaned) == 10 and cleaned.startswith('0') and cleaned[1] in {'1', '7'}:
         return f'+254{cleaned[1:]}'
-    if re.fullmatch(r'[17]\d{8}', cleaned):
+
+    # Accept 25407XXXXXXXX / 25401XXXXXXXX (common user variant)
+    if len(cleaned) == 13 and cleaned.startswith('2540') and cleaned[4] in {'1', '7'}:
+        return f'+254{cleaned[4:]}'
+
+    # Accept 7XXXXXXXX / 1XXXXXXXX
+    if len(cleaned) == 9 and cleaned[0] in {'1', '7'}:
         return f'+254{cleaned}'
 
     return ""
@@ -45,14 +52,9 @@ def validate_phone_number(phone: str) -> Tuple[bool, Optional[str]]:
     if not phone:
         return False, "Phone number is required"
 
-    # Remove spaces and special characters
-    cleaned = re.sub(r'[\s\-\(\)]', '', phone)
-
-    # Kenyan phone format: +254XXXXXXXXX or 0XXXXXXXXX or 254XXXXXXXXX
-    pattern = r'^(\+?254|0)?[17]\d{8}$'
-
-    if not re.match(pattern, cleaned):
-        return False, "Invalid phone number format"
+    normalized = normalize_phone_number(phone)
+    if not normalized:
+        return False, "Invalid phone number format. Use +254XXXXXXXXX, 0XXXXXXXXX, or 254XXXXXXXXX"
 
     return True, None
 
@@ -115,8 +117,8 @@ def extract_phone_numbers(text: str) -> list:
     Returns:
         List of found phone numbers
     """
-    # Pattern for full Kenyan phone numbers (avoid partial capture groups)
-    phone_pattern = r'(?<!\d)(?:\+254|254|0)?[17]\d{8}(?!\d)'
+    # Match common Kenyan number formats in free text
+    phone_pattern = r'(?<!\d)(?:\+254[17]\d{8}|254[17]\d{8}|0[17]\d{8}|2540[17]\d{8}|[17]\d{8})(?!\d)'
     matches = re.findall(phone_pattern, text)
 
     normalized_phones = []
